@@ -67,7 +67,7 @@ begin
 **************************************************************************************
 *************************************************************************************/
 
-	// first assign the bits that simply pass thru the execution engine 
+	// first assign the bits that pass thru the execution engine 
 	// maybe remove these from this module once everything is more clear (they could have a more direct path to their destination)
 	read_from = instr[1];
 	write_to_reg = instr[0]; 
@@ -76,29 +76,72 @@ begin
 	// instruction bits are passed, control bits are assigned
 	case (instr[4:2]) //only using the instruction code (first 3 bits) of the instruction register
 		
-		add       : begin
-				    add_en = 1'b1; // enable add/sub module
-				    add_or_sub = 1'b0; // choose add
+		add       : begin // CASE ADD
+					    write_to_mem = 1'b0;
+					    add_en       = 1'b1; // enable add/sub module
+					    scale_en     = 1'b0;
+					    mult_en      = 1'b0;
+					    transpose_en = 1'b0;
+					    add_or_sub   = 1'b0; // choose add
+					end
+
+		sub       : begin // CASE SUBTRACT
+						write_to_mem = 1'b0;
+					    add_en       = 1'b1; // enable add/sub module
+					    scale_en     = 1'b0;
+					    mult_en      = 1'b0;
+					    transpose_en = 1'b0;
+					    add_or_sub   = 1'b1; // choose sub
 				    end
 
-		sub       : begin
-				    add_en = 1'b1; // enable add/sub module
-				    add_or_sub = 1'b1; // choose sub
-				    end
+		scale  	  : begin // CASE SCALE
+					    write_to_mem = 1'b0;
+					    add_en       = 1'b0; 
+					    scale_en     = 1'b1; // enable scale module
+					    mult_en      = 1'b0;
+					    transpose_en = 1'b0;
+					    add_or_sub   = 1'bz; // not used
+					end
+					
+		mult      : begin // CASE MULTIPLY
+					    write_to_mem = 1'b0;
+					    add_en       = 1'b0; 
+					    scale_en     = 1'b0; 
+					    mult_en      = 1'b1; // enable multiply module
+					    transpose_en = 1'b0;
+					    add_or_sub   = 1'bz; // not used
+					end
+					
+		transpose : begin // CASE TRANSPOSE
+					    write_to_mem = 1'b0;
+					    add_en       = 1'b0; 
+					    scale_en     = 1'b0; 
+					    mult_en      = 1'b0; 
+					    transpose_en = 1'b1; // enable transpose module
+					    add_or_sub   = 1'bz; // not used
+					end
+					
+		unused    : begin // UNUSED CASE -- all outputs not driven (all set to z)
+					    write_to_mem = 1'bz;
+					    add_en       = 1'bz; 
+					    scale_en     = 1'bz; 
+					    mult_en      = 1'bz; 
+					    transpose_en = 1'bz; 
+					    add_or_sub   = 1'bz; 
+					end
 
-		scale  	  : scale_en = 1'b1;
-
-		mult      : mult_en = 1'b1;
-
-		transpose : transpose_en = 1'b1;
-
-		unused    : ; // nothing happens here, but possible room for expansion
-
-		write_mem : write_to_mem = 1'b1;
-
+		write_mem : begin // CASE WRITE TO MEMORY
+					    write_to_mem = 1'b1; // enable transpose module
+					    add_en       = 1'b0; 
+					    scale_en     = 1'b0; 
+					    mult_en      = 1'b0; 
+					    transpose_en = 1'b0; 
+					    add_or_sub   = 1'bz; // not used
+					end
+					
 		stop      : begin
-                    $display("Stop code has been executed");
-                    $stop; // stop program when stop code is detected
+						$display("Stop code has been executed");
+						//$stop; // stop program when stop code is detected
                     end
 		
 		default   : $display("You did something way wrong. Default case in exe_engine reached!");

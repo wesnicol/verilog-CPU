@@ -21,7 +21,7 @@ module t_exe_engine;
 
 // test bench generates & supplies these values to exe_engine
 reg clk, reset;
-reg instr[4:0];
+reg [4:0] instr;
 
 // test bench monitors these values (outputs of exe_engine)
 wire read_from,
