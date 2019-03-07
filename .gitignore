@@ -1,0 +1,40 @@
+
+*.PNG
+*.ini
+Reference/rough_exe_diagram.pdf
+project_files/programcounter/work/_vmake
+*.qtl
+*.qpg
+*.qdb
+project_files/programcounter/work/_info
+*.wlf
+project_files/programcounter/turn in/t_program_counter.v
+project_files/programcounter/turn in/program_counter.v
+*.zip
+project_files/programcounter/transcript
+*.bak
+*.mpf
+*.mti
+project_files/execution_engine/work/_vmake
+project_files/execution_engine/work/_info
+project_files/execution_engine/turn in/t_exe_engine.v
+project_files/execution_engine/turn in/exe_engine.v
+project_files/execution_engine/transcript
+*.pptx
+Block Diagram/opcode_memory.pdf
+*.pdf
+Block Diagram/Copy of CPU_Block_Diagram
+Block Diagram/Block_Diagram_TurnIn.docx
+Assignment 1/work/_vmake
+Assignment 1/work/_info
+Assignment 1/Turn In/tcounter.v
+Assignment 1/Turn In/counter.v
+Assignment 1/transcript
+Assignment 1/tcounter.v
+Assignment 1/counter.v
+Final_Project.pptx
+Block Diagram/opcode_memory.pdf
+Reference/Opcode/OPCODE.gsheet
+*.gsheet
+Working CPU_Block_Diagram
+*.pptx
