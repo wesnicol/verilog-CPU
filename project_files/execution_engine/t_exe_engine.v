@@ -26,7 +26,7 @@ reg [4:0] instr;
 // test bench monitors these values (outputs of exe_engine)
 wire read_from,
 	 write_to_reg,
-	 write_to_mem,
+     write_to_mem,
 	 add_en,
 	 scale_en,
 	 mult_en,
