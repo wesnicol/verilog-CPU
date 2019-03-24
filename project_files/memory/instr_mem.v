@@ -33,10 +33,10 @@ input wire write_data;
 input wire [25:0] data_to_write;
 input wire clk;
 
-reg [25:0] mem [9:0]; // create a 26x10 bit array to store 10 26 bit opcodes
+reg [25:0] mem [9:0]; // create a 10x26 bit array to store 10 26 bit opcodes
 
 
-always @ (posedge clk)
+always @ (posedge clk or write_data)
 begin
 
 	if(write_data) // write data

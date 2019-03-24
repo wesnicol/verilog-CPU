@@ -52,28 +52,32 @@ initial	// Reset test
 initial // set up initial conditions
   begin
 	prog_pointer = 0; // set pointer to first index
-	
   end
+
  
 always @ (posedge clk) // write/read each spot in memory
   begin
-    while(prog_pointer < 10)
-	begin
+
+
+	// write 5555h to spot in memory
+	data_to_write = 26'h5555555; // write 5555 (hexidecimal)
+	write_data = 1; // indicate a write should be executed
 	
-		// write 5555h to spot in memory
-		write_data = 1; // indicate a write should be executed
-		data_to_write = 16'h5555; // write 5555 (hexidecimal)
-		
-		// read previous spot in memory (should be 5555h)
-		write_data = 0; // indicate a read should be executed
-		
-		// write AAAAh to spot in memory
-		write_data = 1; // indicate a write should be executed
-		data_to_write = 16'hAAAA; // write AAAA (hexidecimal)
-		// read previous spot in memory
-		write_data = 0;
-		prog_pointer = prog_pointer + 1'b1; // add 1 to prog_pointer to advance thorugh memory
-	end
+	// read previous spot in memory (should be 5555h)
+	#1 write_data = 0; // indicate a read should be executed
+	
+	
+	
+	// write AAAAh to spot in memory
+	
+	#1 data_to_write = 26'hAAAAAAA; // write AAAA (hexidecimal)
+	#1 write_data = 1; // indicate a write should be executed
+	
+	// read previous spot in memory
+	#1 write_data = 0;
+	
+	#9 prog_pointer <= prog_pointer + 1; // add 1 to prog_pointer to advance thorugh memory
+	
   end
 
 initial  // monoitor outpus here
