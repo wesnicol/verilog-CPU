@@ -23,16 +23,16 @@ Expected Result: Data will either be written to the single register or be read f
 `timescale 1ns / 1ns
 module output_reg(data, write_data, data_to_write, clk);
 
-integer i 0; // used as an index in the while loop
+integer i; // used as an index in the while loop
 
-output reg [15:0] data [15:0]; // large enough to hold a single 4x4 matrix of 16 bit numbers
+output reg [255:0] data; // large enough to hold a single 4x4 matrix of 16 bit numbers
 
 
 input wire write_data;
-input wire [15:0] data_to_write [15:0];
+input wire [255:0] data_to_write;
 input wire clk;
 
-reg [15:0] mem [15:0]; // create a 16x16 bit array to store 1 matrix
+reg [255:0] mem; // create a 16x16 bit array to store 1 matrix
 
 
 always @ (posedge clk or write_data)
@@ -40,7 +40,7 @@ always @ (posedge clk or write_data)
 	i = 0; // make sure index starts from 0
 	if(write_data) // write data
 	  begin
-		while(i < 16) // iterate through all places in the matrix
+		while(i < 255) // iterate through all places in the matrix
 		  begin
 			
 			mem[i] = data_to_write[i]; // put incoming data into memory @ index pointer
@@ -49,7 +49,7 @@ always @ (posedge clk or write_data)
 	  end	
 	else           // read data
 	  begin
-	  while(i < 16) // iterate through all places in the matrix
+	  while(i < 255) // iterate through all places in the matrix
 		  begin
 		  
 			data[i] = mem[i]; // write contents of mem @ index pointer to data (output)

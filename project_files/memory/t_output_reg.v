@@ -1,4 +1,5 @@
 
+
 /***************************************************************** 
 Author: Wes Nicol
 Date  : 2019-03-21
@@ -7,7 +8,7 @@ Professor: Mark Welker
 
 Module: t_memory (test bench)
 	
-Purpose: Test Bench for the instruction memory module. This test bench provides a clock, an index,
+Purpose: Test Bench for the output register module. This test bench provides a clock, an index,
          sample data to write to memory, and a bit dictating whether to read or write
 
 Expected Result: if write bit = 1, data will be written to addressed spot in memory
@@ -21,15 +22,15 @@ module t_memory;
 
 // test bench generates & supplies these values to module
 reg write_data, clk;
-reg [25:0] data_to_write;
-reg [3:0] prog_pointer;
+reg [255:0] data_to_write;
+
 
 // test bench monitors these values (outputs of module being tested)
-wire [25:0] opcode;
+wire [255:0] data;
 
 
 
-instr_mem foo(opcode, prog_pointer, write_data, data_to_write, clk);
+output_reg foo(data, write_data, data_to_write, clk);
 
 initial // Clock generator
   begin

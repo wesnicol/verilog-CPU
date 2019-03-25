@@ -1,4 +1,5 @@
 
+
 /***************************************************************** 
 Author: Wes Nicol
 Date  : 2019-03-21
@@ -7,7 +8,7 @@ Professor: Mark Welker
 
 Module: t_memory (test bench)
 	
-Purpose: Test Bench for the instruction memory module. This test bench provides a clock, an index,
+Purpose: Test Bench for the data memory module. This test bench provides a clock, an index,
          sample data to write to memory, and a bit dictating whether to read or write
 
 Expected Result: if write bit = 1, data will be written to addressed spot in memory
