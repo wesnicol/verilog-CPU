@@ -35,7 +35,7 @@ input wire reset, clk;
 reg mem [255:0]; // create a 16x16 bit array to store 1 matrix
 
 
-always @ (posedge clk or write_data or reset)
+always @ (posedge clk or write_data or posedge reset)
   begin
 	if(reset)
 	  begin

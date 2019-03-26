@@ -59,9 +59,11 @@ initial // set up initial conditions
 always @ (posedge clk) // write/read each spot in memory
   begin
 
-
+/***************************************
+WRITE AND READ TO EVERY SPOT IN MEMORY
+***************************************/
 	// write 5555h to spot in memory
-	data_to_write = 255'h5555555; // write 5555 (hexidecimal)
+	data_to_write = 255'h555555555555555555555555555555555555555555555555555555555555555; // write 5555 to all 256 bits (hexidecimal)
 	write_data = 1; // indicate a write should be executed
 	
 	// read previous spot in memory (should be 5555h)
@@ -71,7 +73,7 @@ always @ (posedge clk) // write/read each spot in memory
 	
 	// write AAAAh to spot in memory
 	
-	#1 data_to_write = 26'hAAAAAAA; // write AAAA (hexidecimal)
+	#1 data_to_write = 255'hAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA; // write AAAA (hexidecimal)
 	#1 write_data = 1; // indicate a write should be executed
 	
 	// read previous spot in memory
