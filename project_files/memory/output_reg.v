@@ -21,7 +21,7 @@ Expected Result: Data will either be written to the single register or be read f
 *****************************************************************/
 
 `timescale 1ns / 1ns
-module output_reg(data, write_data, data_to_write, clk);
+module output_reg(data, write_data, data_to_write, reset, clk);
 
 integer i; // used as an index in the while loop
 
@@ -30,30 +30,41 @@ output reg [255:0] data; // large enough to hold a single 4x4 matrix of 16 bit n
 
 input wire write_data;
 input wire [255:0] data_to_write;
-input wire clk;
+input wire reset, clk;
 
-reg [255:0] mem; // create a 16x16 bit array to store 1 matrix
+reg mem [255:0]; // create a 16x16 bit array to store 1 matrix
 
 
-always @ (posedge clk or write_data)
+always @ (posedge clk or write_data or reset)
   begin
-	i = 0; // make sure index starts from 0
-	if(write_data) // write data
+	if(reset)
 	  begin
-		while(i < 255) // iterate through all places in the matrix
-		  begin
-			
-			mem[i] = data_to_write[i]; // put incoming data into memory @ index pointer
-			i = i+1;
+	    i = 0; // make sure index starts from 0
+		while(i < 256)
+		  begin 
+		    mem[i] = 0; // reset all bits 
+			i = i+1; // increment index
 		  end
-	  end	
-	else           // read data
+	  end
+	else
 	  begin
-	  while(i < 255) // iterate through all places in the matrix
+		if(write_data) // write data
 		  begin
-		  
-			data[i] = mem[i]; // write contents of mem @ index pointer to data (output)
-			i = i+1;
+		    i = 0; // make sure index starts from 0
+			while(i < 256) // iterate through all places in the matrix
+			  begin
+				mem[i] = data_to_write[i]; // put incoming data into memory @ index pointer
+				i = i+1; // increment index
+			  end
+		  end	
+		else           // read data
+		  begin
+		    i = 0; // make sure index starts from 0
+		    while(i < 256) // iterate through all places in the matrix
+			  begin
+				data[i] = mem[i]; // write contents of mem @ index pointer to data (output)
+				i = i+1; // increment index
+			  end
 		  end
 	  end
   end

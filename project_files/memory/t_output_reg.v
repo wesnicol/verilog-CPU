@@ -18,10 +18,10 @@ Expected Result: if write bit = 1, data will be written to addressed spot in mem
 *****************************************************************/
 
 `timescale 1ns / 1ns
-module t_memory;
+module t_output_reg;
 
 // test bench generates & supplies these values to module
-reg write_data, clk;
+reg write_data, reset, clk;
 reg [255:0] data_to_write;
 
 
@@ -30,7 +30,7 @@ wire [255:0] data;
 
 
 
-output_reg foo(data, write_data, data_to_write, clk);
+output_reg foo(data, write_data, data_to_write, reset, clk);
 
 initial // Clock generator
   begin
@@ -39,20 +39,20 @@ initial // Clock generator
   end
 
 
-/****************************
+
 initial	// Reset test
   begin
     reset = 0;
     #5 reset = 1;
     #4 reset = 0;
   end
-****************************/
+
 
 
  
 initial // set up initial conditions
   begin
-	prog_pointer = 0; // set pointer to first index
+
   end
 
  
@@ -61,7 +61,7 @@ always @ (posedge clk) // write/read each spot in memory
 
 
 	// write 5555h to spot in memory
-	data_to_write = 26'h5555555; // write 5555 (hexidecimal)
+	data_to_write = 255'h5555555; // write 5555 (hexidecimal)
 	write_data = 1; // indicate a write should be executed
 	
 	// read previous spot in memory (should be 5555h)
@@ -77,11 +77,10 @@ always @ (posedge clk) // write/read each spot in memory
 	// read previous spot in memory
 	#1 write_data = 0;
 	
-	#9 prog_pointer <= prog_pointer + 1; // add 1 to prog_pointer to advance thorugh memory
-	
+
   end
 
 initial  // monoitor outpus here
-    $monitor($stime, opcode);
+    $monitor($stime, data);
 
 endmodule
