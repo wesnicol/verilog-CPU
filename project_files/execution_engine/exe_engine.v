@@ -152,6 +152,6 @@ begin
 		
 		default   : $display("You did something way wrong. Default case in exe_engine reached!");
 
-	endcase
-end
+	endcase // CASE END
+end // ALWAYS END
 endmodule

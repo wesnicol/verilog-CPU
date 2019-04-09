@@ -48,26 +48,26 @@ initial // Clock generator
   begin
     clk = 0;
     forever #10 clk = !clk;
-  end
+  end // INITIAL END
 
 initial	// Reset test
   begin
     reset = 0;
     #5 reset = 1;
     #4 reset = 0;
-  end
+  end // INTIAL END
  
 initial // set up initial conditions
   begin
 	instr = 5'b0; // start at instruction 00000
 	// no other initial conditions for now
-  end
+  end // INITIAL END
  
 always @ (posedge clk) // cycle through instructions
   begin
     instr = instr + 1'b1; // add 1 to instruction every clk
 	                      // ensures complete coverage of instruction possiblities
-  end
+  end // ALWAYS END
 
 initial
     $monitor($stime,
