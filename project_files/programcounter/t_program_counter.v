@@ -12,7 +12,7 @@ initial // Clock generator
   begin
     clk = 0;
     forever #10 clk = !clk;
-  end
+  end // INITIAL END
   
 
 initial // block to set conditions of counter
@@ -21,7 +21,7 @@ initial // block to set conditions of counter
     offset = 16'hA; //set the size of the offset here
     #1 reset = 1; // forces the address to start at 0
     #1 reset = 0;
-  end
+  end // INITIAL END
 
 initial
     $monitor($stime,, reset,, clk,,, address, offset); 

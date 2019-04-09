@@ -50,8 +50,8 @@ begin
 		  begin
 			mem[pointer][i] = 0;
 			i = i+1;
-	      end
-	  end
+	      end // WHILE END
+	  end // IF END
 	else // if reset is low advance with normal memory operation
 	  begin
 	    if(write_data) // write data
@@ -61,8 +61,8 @@ begin
 			  begin
 				mem[pointer][i] = data_to_write[i]; // put incoming data into memory @ index pointer
 				i = i+1; // increment index
-			  end
-		  end	
+			  end // WHILE END
+		  end // IF END
 		else if(read_data)           // read data
 		  begin
 		    i = 0; // make sure index starts from 0
@@ -70,9 +70,9 @@ begin
 			  begin
 				data[i] = mem[pointer][i]; // write contents of mem @ index pointer to data (output)
 				i = i+1; // increment index
-			  end
-		  end
+			  end // WHILE END 
+		  end // ELSE IF END
 	
-	  end
-  end
+	  end // ELSE END 
+  end // ALWAYS END
 endmodule

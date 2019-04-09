@@ -38,7 +38,7 @@ initial // Clock generator
   begin
     clk = 0;
     forever #10 clk = !clk;
-  end
+  end // INITIAL END
 
 
 /********************
@@ -47,7 +47,7 @@ initial	// Reset test
     reset = 0;
     #5 reset = 1;
     #4 reset = 0;
-  end
+  end // INITIAL END
 ********************/
 
 
@@ -55,7 +55,7 @@ initial	// Reset test
 initial // set up initial conditions
   begin
 
-  end
+  end // INITIAL END
 
  
 initial // write/read each spot in memory
@@ -103,12 +103,12 @@ WALK AA ACROSS MEMORY
 		data_to_write = data_to_write * 256'h100; // this multiplication shifts AA two places left
 	
 	    i = i+1; // update index
-	  end
+	  end // WHIEL END
 	
 	
 	
 
-  end
+  end // INITIAL END
 
 initial  // monoitor outpus here
     $monitor($stime, data);

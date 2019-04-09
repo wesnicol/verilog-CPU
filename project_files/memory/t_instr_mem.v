@@ -38,7 +38,7 @@ initial // Clock generator
   begin
     clk = 0;
     forever #10 clk = !clk;
-  end
+  end // INITAL END
 
 
 /*********************
@@ -47,7 +47,7 @@ initial	// Reset test
     reset = 0;
     #5 reset = 1;
     #4 reset = 0;
-  end
+  end // INITAL END
 *********************/
 
  

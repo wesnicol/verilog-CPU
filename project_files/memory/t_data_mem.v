@@ -39,7 +39,7 @@ initial // Clock generator
   begin
     clk = 0;
     forever #10 clk = !clk;
-  end
+  end // INTIAL END
 
 
 /*********************
@@ -57,7 +57,7 @@ initial // set flags to zero
 	write_data = 0;
 	read_data = 0;
 	reset = 0;
-  end
+  end // INITAL END
  
 initial // write/read each spot in memory
   begin

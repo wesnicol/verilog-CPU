@@ -45,8 +45,8 @@ always @ (posedge clk or posedge write_data or posedge read_data or posedge rese
 		  begin 
 		    mem[i] = 0; // reset all bits 
 			i = i+1; // increment index
-		  end
-	  end
+		  end // WHILE END
+	  end // IF END 
 	else
 	  begin
 		if(write_data) // write data
@@ -56,8 +56,8 @@ always @ (posedge clk or posedge write_data or posedge read_data or posedge rese
 			  begin
 				mem[i] = data_to_write[i]; // put incoming data into memory @ index pointer
 				i = i+1; // increment index
-			  end
-		  end	
+			  end // WHILE END
+		  end  // IF END
 		else if(read_data)           // read data
 		  begin
 		    i = 0; // make sure index starts from 0
@@ -65,8 +65,8 @@ always @ (posedge clk or posedge write_data or posedge read_data or posedge rese
 			  begin
 				data[i] = mem[i]; // write contents of mem @ index pointer to data (output)
 				i = i+1; // increment index
-			  end
-		  end
-	  end
-  end
+			  end // WHILE END
+		  end // ELSE IF END
+	  end // ELSE END
+  end // ALWAYS END
 endmodule
