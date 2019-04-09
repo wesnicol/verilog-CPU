@@ -21,12 +21,12 @@ module t_exe_engine;
 
 // test bench generates & supplies these values to exe_engine
 reg clk, reset;
-reg instr[4:0];
+reg [3:0] instr;
 
 // test bench monitors these values (outputs of exe_engine)
 wire read_from,
 	 write_to_reg,
-	 write_to_mem,
+     write_to_mem,
 	 add_en,
 	 scale_en,
 	 mult_en,
@@ -48,26 +48,26 @@ initial // Clock generator
   begin
     clk = 0;
     forever #10 clk = !clk;
-  end
+  end // INITIAL END
 
 initial	// Reset test
   begin
     reset = 0;
     #5 reset = 1;
     #4 reset = 0;
-  end
+  end // INTIAL END
  
 initial // set up initial conditions
   begin
-	instr = 1'b0; // start at instruction 00000
+	instr = 5'b0; // start at instruction 00000
 	// no other initial conditions for now
-  end
+  end // INITIAL END
  
 always @ (posedge clk) // cycle through instructions
   begin
     instr = instr + 1'b1; // add 1 to instruction every clk
 	                      // ensures complete coverage of instruction possiblities
-  end
+  end // ALWAYS END
 
 initial
     $monitor($stime,
