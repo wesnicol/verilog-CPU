@@ -83,20 +83,20 @@ always @ (posedge clk or posedge reset or posedge enable)
 		  begin
 			for(col = 0; col < 4; col=col+1)
 			  begin
-				mA[col][row] = m1[ (col*16 + row*64) +15 -: 15 ]; // the extra +15 allows the first index to be the larger number
+				mA[row][col] = m1[ (col*16 + row*64) +15 -: 16 ]; // the extra +15 allows the first index to be the larger number
 				
-			  end // END FOR LOOP ROW
-		  end // END FOR LOOP COL
+			  end // END FOR LOOP COL
+		  end // END FOR LOOP ROW
 	  
 		// unrolling m2 into mB
 		for(row = 0; row < 4; row=row+1)  
 		  begin
 			for(col = 0; col < 4; col=col+1)
 			  begin
-				mB[col][row] = m2[ (col*16 + row*64) +15 -: 15 ]; // the extra +15 allows the first index to be the larger number
+				mB[row][col] = m2[ (col*16 + row*64) +15 -: 16 ]; // the extra +15 allows the first index to be the larger number
 				
-			  end // END FOR LOOP ROW
-		  end // END FOR LOOP COL
+			  end // END FOR LOOP COL
+		  end // END FOR LOOP ROW
 
 
 
@@ -118,8 +118,8 @@ always @ (posedge clk or posedge reset or posedge enable)
 					mR[row][col] = sum;
 					
 				  end // END FOR LOOP i
-		      end // END FOR LOOP ROW
-	      end // END FOR LOOP COL
+		      end // END FOR LOOP COL
+	      end // END FOR LOOP ROW
 	  
 	  
 	  
@@ -132,10 +132,10 @@ always @ (posedge clk or posedge reset or posedge enable)
 	      begin
 		    for(col = 0; col < 4; col=col+1)
 		      begin
-		    	m_out[ (col*16 + row*64) +15 -: 15] = mR[col][row];
+		    	m_out[ (col*16 + row*64) +15 -: 16 ] = mR[row][col];
 			
-		      end // END FOR LOOP ROW
-	      end // END FOR LOOP COL
+		      end // END FOR LOOP COL
+	      end // END FOR LOOP ROW
 		
 		done = 1'b1; // set done flag
 		  
