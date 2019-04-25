@@ -61,10 +61,8 @@ parameter stop      = 3'b111;
 always @ (posedge clk or posedge reset)
 begin
 /*************************************************************************************
-**************************************************************************************
-	// RESET SHOULD PROBABLY DO SOMETHING HERE, BUT WHAT?
+	RESET SHOULD PROBABLY DO SOMETHING HERE, BUT WHAT?
 	maybe it can just trigger the STOP instruciton
-**************************************************************************************
 *************************************************************************************/
 
 	// first assign the bits that passes thru the execution engine 
