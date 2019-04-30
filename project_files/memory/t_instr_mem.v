@@ -56,7 +56,7 @@ initial // write/read each spot in memory
 
 /***************************************
 WRITE AND READ TO EVERY SPOT IN MEMORY
-***************************************/
+
     i = 0;
     while(i < 10) // 10 spots to wirte to in memory
 	  begin
@@ -82,7 +82,7 @@ WRITE AND READ TO EVERY SPOT IN MEMORY
 		
 /********************************************************
 READ FROM OTHER SPOTS IN MEMORY TO SHOW THEY ARE EMPTY
-********************************************************/
+
         j = 0;
         while(j < 10)
 		  begin 
@@ -98,7 +98,7 @@ READ FROM OTHER SPOTS IN MEMORY TO SHOW THEY ARE EMPTY
 		
 /***************************************
 WALK AA ACROSS MEMORY
-***************************************/
+
 		#1 data_to_write = 26'hAA; // begin with 000...00AA
 		
 		
@@ -119,7 +119,22 @@ WALK AA ACROSS MEMORY
 	  
 	    i = i+1;
 	  end // end while loop with index i
-  end // end always block
+
+**********************************************************/
+
+   i = 0;
+    while(i < 10) // 10 spots to wirte to in memory
+	  begin
+
+	    pointer = i; 
+		read_data = 1'b1;
+		display("Opcode: %b\n",data);
+		read_data = 1'b0;
+		
+		
+	  end // end while
+    
+  end // end initial block
 
 initial  // monoitor outputs here
     $monitor($stime, data);

@@ -149,7 +149,6 @@ always @ (posedge clk)
 		// when enable = 0, don't drive anything, all output should = z
 		m_out = 256'bz; // assign all spots to z (undriven)
 	  
-	  
 	  end // END else 
 	  
 	  

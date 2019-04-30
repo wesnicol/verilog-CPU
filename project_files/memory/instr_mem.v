@@ -25,52 +25,109 @@ Expected Result: Given different program counter inputs, datas corresponding to 
 *****************************************************************/
 
 `timescale 1ns / 1ns
-module instr_mem(data, pointer, write_data, read_data, data_to_write, reset, clk);
+module instr_mem(data,         // outputs
+                 data_instr,
+				 data_dest,
+				 data_src1,
+				 data_src2,
+				 data_scalar,
+                 pointer,      // inputs
+				 write_data,
+				 read_data,
+				 data_to_write,
+				 reset, clk);
 
 integer i; 
 
-output reg [25:0] data; // large enough to hold a single data
+output reg [26:0] data; // large enough to hold a single opcode
+output reg [4:0] data_instr;
+output reg [6:0] data_dest;
+output reg [6:0] data_src1;
+output reg [6:0] data_src2;
+output reg [7:0] data_scalar;
+
 
 
 input wire [3:0] pointer; // pointer large enough to address 10 instructions
 input wire write_data, read_data;
-input wire [25:0] data_to_write;
+input wire [26:0] data_to_write;
 input wire reset, clk;
 
-reg mem [9:0][25:0]; // create a 10x26 bit array to store 10 26 bit opcodes
+reg [26:0] mem [9:0]; // create a 10x26 bit array to store 10 26 bit opcodes
 
 
-always @ (posedge clk or posedge write_data or posedge read_data or posedge reset)
+
+
+
+/***********************HARD CODED OPCODES FOR PRESENTATION OF PROJECT ***********/
+// this is a series of opcodes in a predefined order
+// opcodes are stored as 27-bit numbers
+
+/********************************************************************************/
+
+// hard code predetermined opcodes
+initial
+  begin
+    
+    // operation 1: Add the first matrix (mem[0]) to the second matrix (mem[1]) and 
+	//              store the result in memory mem[2]
+	mem[0] = 27'b000000000010000000000000010;
+
+
+	// operation 2: Subtract the first matrix (mem[0]) from the result in step 1 (mem[2]) and 
+	//              store the result somewhere else in memory mem[3]
+	mem[1] = 27'b001000000011000000000000100;
+
+
+	// operation 3: Transpose the result from step 1 (mem[2])
+	//              store in memory mem[4]
+	mem[2] = 27'b100000000100000001000000000;
+
+
+	// operation 4: Scale the result in step 3 (mem[4]) 
+	//              store in the register
+	mem[3] = 27'b010100000000000010000101010;
+
+
+	// operation 5: Multiply the result from step 4 (reg) by the result in step 3 (mem[4])
+	//              store in memory mem[5]
+	mem[4] = 27'b011010000101000000000001000;
+    
+	
+  
+  
+  
+  end // end initial
+
+always @ (posedge clk)
 begin
 	if(reset) // if reset is high
 	  begin 
 		data = 0;
 	    i = 0;
-		while(i < 26) // iterate through all spots in memory
-		  begin
-			mem[pointer][i] = 0;
-			i = i+1;
-	      end // WHILE END
+	    mem[pointer] = 0;
+
 	  end // IF END
 	else // if reset is low advance with normal memory operation
 	  begin
 	    if(write_data) // write data
 		  begin
-		    i = 0; // make sure index starts from 0
-			while(i < 256) // iterate through all places in the matrix
-			  begin
-				mem[pointer][i] = data_to_write[i]; // put incoming data into memory @ index pointer
-				i = i+1; // increment index
-			  end // WHILE END
+		    
+			mem[pointer] = data_to_write; // put incoming data into memory @ index pointer
+
 		  end // IF END
 		else if(read_data)           // read data
 		  begin
-		    i = 0; // make sure index starts from 0
-		    while(i < 256) // iterate through all places in the matrix
-			  begin
-				data[i] = mem[pointer][i]; // write contents of mem @ index pointer to data (output)
-				i = i+1; // increment index
-			  end // WHILE END 
+		    
+			data = mem[pointer]; // write contents of mem @ index pointer to data (output)
+			
+			//assign all the different parts of op_code for individual usage
+			data_instr  = data[26:22];
+			data_dest   = data[21:15];
+			data_src1   = data[14:8];
+			data_src2   = data[7:1];
+			data_scalar = data[7:0];
+
 		  end // ELSE IF END
 	
 	  end // ELSE END 

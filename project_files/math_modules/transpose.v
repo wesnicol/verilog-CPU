@@ -4,11 +4,10 @@ Date  : 2019-04-16
 Class : HDL
 Professor: Mark Welker
 
-Module: scale_matrix
+Module: transpose
 
 Inputs: 
-		matrix : 4x4 matrix to be scaled
-		scalar : 8-bit number that will be multiplied by every spot in the matrix
+		matrix : 4x4 matrix to be transposed
 		enable : signal from instruction decode
 		clk    : 
 		
@@ -16,22 +15,20 @@ Inputs:
 Outputs: 
 		m_out : output matrix
 
-This module will scale every number in a 4x4 matrix by the input scalar.
-The output will be the input matrix scaled up by the input scalar
+This module will transpose the input matrix and put the resulting matrix on the databus.
+Transposing a matrix simply means flipping the row and column of each spot in the matrix
 ****************************************************************/
 
 `timescale 1ns / 1ns
 
-module scale_matrix (m_out,     //outputs 
-                     matrix,    //inputs
-				     scalar, 
-				     enable, reset, clk); 
+module transpose (m_out,     //outputs
+                  matrix,    //inputs
+			      enable, reset, clk); 
 
 
 
 // declare inputs, these are 1-dimensional to allow transfer between modules
 input wire [255:0] matrix; 
-input wire [7:0]   scalar;
 input wire enable, reset, clk;
 
 
@@ -53,7 +50,6 @@ output reg [255:0] m_out; // matrix as single 256 bit variables (4row X 4col X 1
 
 
 
-
 integer row, col; // used as indicies in for loops
 //integer product; // result of multiplication that is then stored in the output matrix
 
@@ -66,7 +62,7 @@ always @ (posedge clk)
 	if(enable) // only do operation if enable is high
 	  begin
 	  
-
+	  
 		// unroll matrix into useable variable
 
 		/******UNROLLING PROCESES*************
@@ -105,7 +101,7 @@ always @ (posedge clk)
 		    for(col = 0; col < 4; col=col+1)
 		      begin
 			  
-			    m_result[row][col] = (scalar) * (m[row][col]);
+			    m_result[row][col] = m[col][row]; // just need to flip row and column of each spot
 
 		      end // END FOR LOOP COL
 	      end // END FOR LOOP ROW
@@ -126,14 +122,15 @@ always @ (posedge clk)
 		      end // END FOR LOOP COL
 	      end // END FOR LOOP ROW
 		
-		  
+
 	  end // END IF(ENABLE)
-	  else // if enable = 0
-	    begin
+	else // if enable = 0
+	  begin
 	    
-	      m_out = 256'bz; // assign output to z (undriven)
+	    m_out = 256'bz; // assign output to z (undriven)
 	  
-	    end // END ELSE
+	  end // END ELSE
   end // END ALWAYS @ CLK
 endmodule
+
 

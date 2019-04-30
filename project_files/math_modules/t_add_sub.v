@@ -166,7 +166,7 @@ always @ (posedge enable) // trigger a display loop whenever the module enable g
 	$display("%d %d %d %d", out_matrix[3][0], out_matrix[3][1], out_matrix[3][2], out_matrix[3][3]);
 	
 	
-  end // END INITIAL BLOCK USED FOR DISPLAYING
+  end // END ALWAYS BLOCK USED FOR DISPLAYING
 	
 endmodule
 

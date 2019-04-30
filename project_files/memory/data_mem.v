@@ -25,53 +25,167 @@ Expected Result: Given different program counter inputs, datas corresponding to 
 *****************************************************************/
 
 `timescale 1ns / 1ns
-module data_mem(data, pointer, write_data, read_data, data_to_write, reset, clk);
+module data_mem(data1,
+                data2,
+				pointer1,
+                pointer2,
+				write_data_pointer,
+				data_to_write,
+                write_data,				
+				read_data, 
+				reset, clk);
 
-integer i; 
+integer i,row,col; 
 
-output reg [255:0] data; // large enough to hold a single matrix
+output reg [255:0] data1; // large enough to hold a single matrix
+output reg [255:0] data2; // large enough to hold a single matrix
 
 
-input wire [2:0] pointer; // pointer large enough to address 6 matracies
-input wire write_data, read_data;
+input wire [2:0] pointer1; // pointer large enough to address 6 matracies
+input wire [2:0] pointer2; // pointer large enough to address 6 matracies
+input wire [2:0] write_data_pointer;
 input wire [255:0] data_to_write;
-input wire reset, clk;
+input wire write_data, 
+           read_data,
+		   reset, clk;
 
-reg mem [5:0][255:0]; // create a 6x256 bit array to store 6 256 bit matracies
+
+reg [255:0] mem [5:0]; // create a 6x256 bit array to store 6 256 bit matracies
 
 
-always @ (posedge clk or posedge write_data or posedge read_data or posedge reset)
+
+// hard code in matracies for demonstration of project
+reg [15:0] matrix1 [3:0][3:0]; 
+reg [15:0] matrix2 [3:0][3:0];
+reg [255:0] m1;
+reg [255:0] m2;
+
+initial // assign predetermined matricies and unroll them
+  begin
+	// MATRIX 1
+    matrix1[0][0] = 16'd04; matrix1[0][1] = 16'd12; matrix1[0][2] = 16'd04; matrix1[0][3] = 16'd34;
+	matrix1[1][0] = 16'd07; matrix1[1][1] = 16'd06; matrix1[1][2] = 16'd11; matrix1[1][3] = 16'd09;
+	matrix1[2][0] = 16'd09; matrix1[2][1] = 16'd02; matrix1[2][2] = 16'd08; matrix1[2][3] = 16'd13;
+	matrix1[3][0] = 16'd02; matrix1[3][1] = 16'd15; matrix1[3][2] = 16'd16; matrix1[3][3] = 16'd03;
+  
+    // MATRIX 2
+	matrix2[0][0] = 16'd23; matrix2[0][1] = 16'd45; matrix2[0][2] = 16'd67; matrix2[0][3] = 16'd22;
+	matrix2[1][0] = 16'd07; matrix2[1][1] = 16'd06; matrix2[1][2] = 16'd04; matrix2[1][3] = 16'd01;
+	matrix2[2][0] = 16'd18; matrix2[2][1] = 16'd56; matrix2[2][2] = 16'd13; matrix2[2][3] = 16'd12;
+	matrix2[3][0] = 16'd03; matrix2[3][1] = 16'd05; matrix2[3][2] = 16'd07; matrix2[3][3] = 16'd09;
+  
+  
+  
+  	// set values of m1 from matrix1
+    for(row = 0; row < 4; row=row+1)  
+	  begin
+		for(col = 0; col < 4; col=col+1)
+		  begin
+			
+			m1[ (col*16 + row*64) +15 -: 16 ] = matrix1[row][col]; // the extra +15 allows the first index to be the larger number
+			
+		  end // END FOR LOOP COL
+	  end // END FOR LOOP ROW
+	
+	
+	// set values of m2 from matrix2
+    for(row = 0; row < 4; row=row+1)  
+	  begin
+		for(col = 0; col < 4; col=col+1)
+		  begin
+			
+			m2[ (col*16 + row*64) +15 -: 16 ] = matrix2[row][col]; // the extra +15 allows the first index to be the larger number
+		  
+		  end // END FOR LOOP COL
+	  end // END FOR LOOP ROW
+	  
+	  
+	// now physically place matricies in memory
+	mem[0] = m1;
+	mem[1] = m2;
+	  
+
+  end // END INITIAL
+
+
+always @ (posedge clk)
   begin
 	if(reset) // if reset is high
 	  begin 
-		data = 0;
-	    i = 0;
-		while(i < 256) // iterate through all spots in memory
-		  begin
-			mem[pointer][i] = 0;
-			i = i+1;
-	      end // WHILE END
+		data1 = 0;
+		data2 = 0;
+		mem[pointer1] = 0;
+		mem[pointer2] = 0;
+		
 	  end // IF END
 	else // if reset is low advance with normal memory operation
 	  begin
-	    if(write_data) // write data
+	    
+		//always drive data2 output
+
+        mem[pointer2] = data2; // put incoming data into memory @ index pointer
+
+	    if(write_data) 
 		  begin
-		    i = 0; // make sure index starts from 0
-			while(i < 256) // iterate through all places in the matrix
-			  begin
-				mem[pointer][i] = data_to_write[i]; // put incoming data into memory @ index pointer
-				i = i+1; // increment index
-			  end // WHILE END
+			
+			mem[write_data_pointer] = data_to_write; // put incoming data into memory @ index pointer
+
 		  end	// IF END
-		else if(read_data)           // read data
+		if(read_data)
 		  begin
-		    i = 0; // make sure index starts from 0
-		    while(i < 256) // iterate through all places in the matrix
-			  begin
-				data[i] = mem[pointer][i]; // write contents of mem @ index pointer to data (output)
-				i = i+1; // increment index
-			  end // WHILE END
-		  end // ELSE IF END
+
+			data1 = mem[pointer1]; // write contents of mem @ index pointer to data (output)
+
+		  end // IF END
+		else // if not reading data
+		  begin
+		    // do not drive data1 output
+			
+				data1 = 256'bz; 
+
+		  end // END ELSE   (read_data=0)
 	  end // ELSE END
   end // END ALWAYS
+
+
+
+
+
+reg [15:0] out_matrix [3:0][3:0]; // matrix for displaying memory contents
+reg [255:0] m_out; 
+
+initial // output the contents of matrix memory at the end of execution
+  begin 
+    #1000; // wait long enough for all instructions to be carried out
+
+
+    for(i=0;i<6;i=i+1)
+	  begin
+		// set values of out_matrix1 from m_out
+		for(row = 0; row < 4; row=row+1)  
+		  begin
+			for(col = 0; col < 4; col=col+1)
+			  begin
+				
+				m_out = mem[i];
+				out_matrix[row][col] = m_out[ (col*16 + row*64) +15 -: 16 ]; // the extra +15 allows the first index to be the larger number
+				
+			  end // END FOR LOOP col
+		  end // END FOR LOOP row
+		
+		$display("Result matrix (mem[%d]:\n",i);
+		
+		$display("%d %d %d %d", out_matrix[0][0], out_matrix[0][1], out_matrix[0][2], out_matrix[0][3]);
+
+		$display("%d %d %d %d", out_matrix[1][0], out_matrix[1][1], out_matrix[1][2], out_matrix[1][3]);
+		
+		$display("%d %d %d %d", out_matrix[2][0], out_matrix[2][1], out_matrix[2][2], out_matrix[2][3]);
+		
+		$display("%d %d %d %d", out_matrix[3][0], out_matrix[3][1], out_matrix[3][2], out_matrix[3][3]);
+		
+      end // END FOR LOOP i
+  end // END INITIAL (for displaying memory contents)
+  
+  
+  
 endmodule

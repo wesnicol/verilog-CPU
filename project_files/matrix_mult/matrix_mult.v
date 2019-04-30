@@ -13,7 +13,6 @@ Inputs:
 
 Outputs: 
 		m_out : output matrix
-        done : flag -- set to 0 before operation, returned to 1 when finished
 
 This module does matrix multiply on the two input matricies and outputs 
 the resulting matrix
@@ -23,13 +22,11 @@ Enable must be high for operation
 `timescale 1ns / 1ns
 
 module matrix_mult (m_out, //outputs
-                    done,   
                     m1,    //inputs
 				    m2, 
 				    enable, reset, clk); 
 
 output reg [255:0] m_out; // matracies input as single 256 bit variables (4row X 4col X 16bit)
-output reg done; // flag goes low when operation begins, returns high when finished
 
 
 
@@ -53,7 +50,7 @@ integer row, col, i; // used as indicies in for loops
 integer sum; // used in matrix multiplication loop
 
 
-always @ (posedge clk or posedge reset or posedge enable)
+always @ (posedge clk)
   begin
   
 	
@@ -62,8 +59,7 @@ always @ (posedge clk or posedge reset or posedge enable)
 	  begin
 	  
 	  
-	    done = 1'b0; // set done flag to false before operation (set back after completion)
-	    
+
 		// unrolling for matrix multiplication
 
 		/******UNROLLING PROCESES*************
@@ -136,9 +132,13 @@ always @ (posedge clk or posedge reset or posedge enable)
 			
 		      end // END FOR LOOP COL
 	      end // END FOR LOOP ROW
-		
-		done = 1'b1; // set done flag
-		  
+
 	  end // END IF(ENABLE)
-  end // END ALWAYS @ CLK OR RESET OR ENABLE
+	  else // if enable = 0
+	    begin
+	    
+	      m_out = 256'bz; // assign output to z (undriven)
+	  
+	    end // END ELSE
+  end // END ALWAYS @ CLK
 endmodule

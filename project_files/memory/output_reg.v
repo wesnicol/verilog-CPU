@@ -58,7 +58,7 @@ always @ (posedge clk or posedge write_data or posedge read_data or posedge rese
 				i = i+1; // increment index
 			  end // WHILE END
 		  end  // IF END
-		else if(read_data)           // read data
+		if(read_data)           // read data
 		  begin
 		    i = 0; // make sure index starts from 0
 		    while(i < 256) // iterate through all places in the matrix
@@ -66,7 +66,18 @@ always @ (posedge clk or posedge write_data or posedge read_data or posedge rese
 				data[i] = mem[i]; // write contents of mem @ index pointer to data (output)
 				i = i+1; // increment index
 			  end // WHILE END
-		  end // ELSE IF END
+		  end // IF END
+		  else // if not reading data
+		    begin 
+			
+			// do not drive output
+			i = 0; // make sure index starts from 0
+		    while(i < 256) // iterate through all places in the matrix
+			  begin
+				data[i] = 1'bz;
+				i = i+1; // increment index
+			  end // WHILE END
+			end // END ELSE
 	  end // ELSE END
   end // ALWAYS END
 endmodule

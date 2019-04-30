@@ -25,7 +25,6 @@ reg [7:0] scalar;
 
 // test bench monitors these values (outputs of module being tested)
 wire [255:0] m_out;
-wire done;
 
 // define the input matrix
 reg [15:0] input_matrix [3:0][3:0]; 
@@ -41,10 +40,9 @@ reg [15:0] out_matrix [3:0][3:0]; // used to display output matrix
 integer row, col; //  for-loop indicies 
 
 scale_matrix foo (m_out,     //outputs
-                 done,   
-                 matrix,    //inputs
-				 scalar, 
-				 enable, clk); 
+                  matrix,    //inputs
+				  scalar, 
+				  enable, clk); 
 
 
 initial // Clock generator

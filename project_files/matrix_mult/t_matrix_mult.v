@@ -11,8 +11,6 @@ Purpose: Test Bench for the matrix_mult module. This test bench provides
 
 Expected Result: The two input matricies should be multiplied and the result
                  should be seen as an output of the module.
-				 Also a done flag should be seen as an output that goes high
-				 once the operation has completed
 *****************************************************************/
 
 `timescale 1ns / 1ns
@@ -26,7 +24,7 @@ reg [255:0] m2;
 
 // test bench monitors these values (outputs of module being tested)
 wire [255:0] m_out;
-wire done;
+
 
 // define the input matracies 
 reg [15:0] matrix1 [3:0][3:0]; 
@@ -42,7 +40,6 @@ reg [15:0] out_matrix [3:0][3:0]; // used to display output matrix
 integer row, col; //  for-loop indicies 
 
 matrix_mult foo (m_out, //outputs
-                 done,   
                  m1,    //inputs
 				 m2, 
 				 enable, reset, clk); 
@@ -121,7 +118,7 @@ always @ (posedge clk) // cycle through instructions
 
 initial
   begin
-    #20 // allow everything to settle before you display 
+    #50 // allow everything to settle before you display 
 			 
 			 
 			 
