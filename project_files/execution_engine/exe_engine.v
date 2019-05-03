@@ -28,7 +28,9 @@ Outputs: control bits destined for modules
 `timescale 1ns / 1ns
 
 module exe_engine (read_from,     //outputs
+				   not_read_from,
 				   write_to,
+				   not_write_to,
 				   add_en,
 				   scale_en,
 				   mult_en,
@@ -37,8 +39,10 @@ module exe_engine (read_from,     //outputs
                    instr,        //inputs
 				   reset, clk); 
 
-output reg read_from,     //outputs
+output reg read_from,
+           not_read_from,     //outputs
 		   write_to,
+		   not_write_to,
 		   add_en,
 		   scale_en,
 		   mult_en,
@@ -70,6 +74,11 @@ begin
 	// maybe remove from this module once everything is more clear (could have a more direct path to the destination)
 	read_from = instr[0];
 	write_to  = instr[1];
+	#1; // ensure read_from and write_to were assigned before assigning their nots
+	    // could be done with blocking, but not b/c I've heard horror stories about blocking in ModelSim
+	not_read_from = !read_from;
+	not_write_to = !write_to;
+	
 	
 	// big case statement preforms the function of a decoder 
 	// instruction bits are passed, control bits are assigned

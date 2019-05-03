@@ -49,17 +49,17 @@ reg read_instr_data;
 reg data_to_write;
 
 wire [26:0] current_opcode;
-wire [4:0] data_instr;
-wire [6:0] data_dest;
-wire [6:0] data_src1;
-wire [6:0] data_src2;
-wire [7:0] data_scalar;
+wire [4:0] instr;
+wire [6:0] dest;
+wire [6:0] src1;
+wire [6:0] src2;
+wire [7:0] scalar;
 instr_mem instruction_mem (current_opcode,      // outputs
-                           data_instr,  //current_opcode[26:22]
-				           data_dest,   //current_opcode[21:15]
-				           data_src1,   //current_opcode[14:8]
-				           data_src2,   //current_opcode[7:1]
-				           data_scalar, //current_opcode[7:0]
+                           instr,  //current_opcode[26:22]
+				           dest,   //current_opcode[21:15]
+				           src1,   //current_opcode[14:8]
+				           src2,   //current_opcode[7:1]
+				           scalar, //current_opcode[7:0]
                            address_of_next_instruction,  // inputs
 			           	   write_instr_data,
 				           read_instr_data,
@@ -67,66 +67,73 @@ instr_mem instruction_mem (current_opcode,      // outputs
 				           reset, clk);
 						   
 						   
-wire [255:0] src1;
+wire [255:0] src1_data;
 wire w_reg,
      r_reg;
 wire [255:0] output_of_math;
-output_reg output_register(src1,
-                           w_reg,
+output_reg output_register(src1_data,   // output
+                           w_reg,       // inputs
 				           r_reg, 
 				           output_of_math, 
 				           reset, clk);
 
 
-wire [255:0] src2;
+wire [255:0] src2_data;
 wire enable_mult;
-matrix_mult multiplier(output_of_math, //outputs
-                       src1,           //inputs
-				       src2, 
+matrix_mult multiplier(output_of_math,      //outputs
+                       src1_data,           //inputs
+				       src2_data, 
 				       enable_mult, reset, clk);
 					   
 wire enable_add,
      enable_scale,
 	 enable_transpose,
-	 add_or_sub;
-	 
+	 add_or_sub,
+	 not_r_reg,
+	 not_w_reg;
+
 exe_engine execution_engine(r_reg,     //outputs
-				            w_reg,
-				            enable_add,
+				            not_r_reg,
+							w_reg,
+				            not_w_reg,
+							enable_add,
                             enable_scale,
 				            enable_mult,
 				            enable_transpose,
 				            add_or_sub,
-                            data_instr, //inputs
+                            instr,      //inputs
 							reset, clk); 
 
 
 add_sub addition_subtraction(output_of_math, //outputs   
-                             src1,     //inputs
-				             src2, 
+                             src1_data,     //inputs
+				             src2_data, 
 				             add_or_sub, enable_add, reset, clk);
 							 
-							 
-data_mem data_memory(src1,
-                     src2,
- 					 data_src1,
-					 data_src2,
-					 data_dest,
+
+
+
+
+data_mem data_memory(src1_data,
+                     src2_data,
+ 					 src1,
+					 src2,
+					 dest,
 					 output_of_math,
-					 (!w_reg),
-					 (!r_reg),
+					 not_w_reg,
+					 not_r_reg,
 					 reset, clk);
 					 
 					 
 scale_matrix scale (output_of_math,     //outputs 
-                    src1,              //inputs
-				    data_scalar, 
+                    src1_data,              //inputs
+				    scalar, 
 				    enable_scale,
 					reset, clk); 			 
 
 
 transpose transp(output_of_math,  //outputs
-                 src1,            //inputs
+                 src1_data,       //inputs
 			     enable_transpose, 
 			     reset, clk); 			   
 
@@ -138,7 +145,7 @@ transpose transp(output_of_math,  //outputs
 initial // Clock generator
   begin
     clk = 0;
-    forever #100 clk = !clk;
+    forever #50 clk = !clk;
   end // INITIAL END	
 	
 
@@ -149,21 +156,6 @@ initial
 	read_instr_data = 1'b1;
 	data_to_write = 27'bz;
 
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
- 
 
 
 

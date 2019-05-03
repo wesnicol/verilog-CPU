@@ -123,7 +123,7 @@ always @ (posedge clk)
 	    
 		//always drive data2 output
 
-        mem[pointer2] = data2; // put incoming data into memory @ index pointer
+        data2 = mem[pointer2]; // put incoming data into memory @ index pointer
 
 	    if(write_data) 
 		  begin

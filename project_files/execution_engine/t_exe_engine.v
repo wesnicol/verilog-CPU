@@ -21,12 +21,13 @@ module t_exe_engine;
 
 // test bench generates & supplies these values to exe_engine
 reg clk, reset;
-reg [3:0] instr;
+reg [4:0] instr;
 
 // test bench monitors these values (outputs of exe_engine)
 wire read_from,
-	 write_to_reg,
-     write_to_mem,
+     not_read_from,
+	 write_to,
+	 not_write_to,
 	 add_en,
 	 scale_en,
 	 mult_en,
@@ -34,9 +35,10 @@ wire read_from,
 	 add_or_sub;
 
 
-exe_engine foo(read_from,     //outputs
-			   write_to_reg,
-			   write_to_mem,
+exe_engine foo(read_from,       //outputs
+               not_read_from,    
+			   write_to,
+			   not_write_to,
 			   add_en,
 			   scale_en,
 			   mult_en,
@@ -50,13 +52,18 @@ initial // Clock generator
     forever #10 clk = !clk;
   end // INITIAL END
 
+
+
+/*****************************
 initial	// Reset test
   begin
     reset = 0;
     #5 reset = 1;
     #4 reset = 0;
   end // INTIAL END
- 
+******************************/
+
+
 initial // set up initial conditions
   begin
 	instr = 5'b0; // start at instruction 00000
@@ -65,20 +72,21 @@ initial // set up initial conditions
  
 always @ (posedge clk) // cycle through instructions
   begin
-    instr = instr + 1'b1; // add 1 to instruction every clk
-	                      // ensures complete coverage of instruction possiblities
+    
+	// test all valid instructions
+
+    #15 instr = 5'b001_1_1; // sub	
+	#20 instr = 5'b010_1_1; // scale 
+	#20 instr = 5'b011_1_1; // multiply
+	#20 instr = 5'b100_1_1; // transpose 
+  
+  
+  
   end // ALWAYS END
 
 initial
-    $monitor($stime,
-			 instr,
-	         read_from,
-			 write_to_reg,
-			 write_to_mem,
-			 add_en,
-			 scale_en,
-			 mult_en,
-			 transpose_en,
-			 add_or_sub);
+  begin
+  
+  end // END inital for monitoring
 
 endmodule

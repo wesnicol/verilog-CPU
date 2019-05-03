@@ -68,7 +68,7 @@ always @ (posedge clk or posedge write_data or posedge read_data or posedge rese
 			  end // WHILE END
 		  end // IF END
 		  else // if not reading data
-		    begin 
+		    begin
 			
 			// do not drive output
 			i = 0; // make sure index starts from 0
